@@ -1,1 +1,26 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;700&display=swap');
+@import "~bootstrap/dist/css/bootstrap.css";
+html {
+       background-color: #A9D0FE; 
+}
+h1,h2,h3,h4,h5,h6{
+    font-family: 'Roboto', sans-serif;
+    font-weight:700;
+}
+a,p,button{
+    font-family: 'Roboto', sans-serif;
+}
+button{
+    width: 100px;
+    height: 30px;
+    background-color: #2667FF; 
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none; 
+    display: inline-block;
+    font-size: 12px;
+    border-radius: 8px;
+    font-weight: 100;
+}

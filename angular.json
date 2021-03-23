@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "s-parking"
+    }
+  },
+  "defaultProject": "s-parking",
+  "cli": {
+    "analytics": false
+  }
 }
