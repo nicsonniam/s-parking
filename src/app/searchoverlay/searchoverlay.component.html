@@ -10,19 +10,31 @@
                 </div>
             </td>
             <td>
-                <div style="width: 373px;">
-                    <h1 style="font-size: 30px;">Say goodbye to parking hell</h1>
-                    <br>
-                    <p style="font-size: 16px;">
+                <div style="width: 373px;" *ngIf="this.searchState==0">
+                    <h1 style="font-size: 30px; padding-bottom: 17px;">Say goodbye to parking hell</h1>
+                    <p style="font-size: 16px; font-weight: 300;">
                         S.Parking aims to provide users with real time
                         parking updates for all HDB carparks, along with
                         suggesting possible alternatives for parking at
                         various places of interest in Singapore.
                     </p>
+                    <button (click)="getStarted()">Get Started</button>
+                </div>
+                <div style="width: 373px;" *ngIf="this.searchState==1">
+                    <h1 style="font-size: 30px; padding-bottom: 17px;">So, where you headed?</h1>
+                    <p style="font-size: 16px; font-weight: 300; line-height:0px;">Search</p>
+                    <input #searchIp maxlength="50" type="text" placeholder="Address, Building Name etc. " style="width: 288px; height: 30px;" 
+                    id="searchIp" onfocus="document.getElementById('cpNoIp').value = ''"/>
+                    <div style="padding-top:25px; padding-bottom: 15px;">
+                        <p style="font-size: 16px; font-weight: 300; line-height: 0px;">or</p>
+                    </div>
+                    <p style="font-size: 16px; font-weight: 300; line-height: 0;">Car Park No.</p>
+                    <input #cpNoIp maxlength="8" type="text" placeholder="E.g. Q123" style="width: 288px; height: 30px;" 
+                    id="cpNoIp" onfocus="document.getElementById('searchIp').value = ''"/>
                     <br>
-                    <button >Get Started</button>
-                </div> 
-                
+                    <br>
+                    <button [disabled]="click" (click)="search(searchIp.value,cpNoIp.value)">Search</button>
+                </div>  
             </td>
         </tr>
     </table>
