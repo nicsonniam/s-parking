@@ -17,6 +17,7 @@ export class SearchoverlayComponent implements OnInit {
   click: boolean = false;
   clickCount: number = 0;
   searchResult=[];
+  selectedAdd: any;
   constructor(
     public postData:PostsService,
     public dialog:MatDialog
@@ -66,7 +67,12 @@ export class SearchoverlayComponent implements OnInit {
             dialogConfig.height = '380px';
             const dialogRef = this.dialog.open(PopupdialogComponent, dialogConfig);
             dialogRef.afterClosed().subscribe(result => {
-              console.log("Dialog output:", result);
+              this.selectedAdd = Object.assign([], result);
+              if(this.selectedAdd.message=="success"){
+                alert("Address found (WIP)")
+              }else{
+                this.searchState=1;
+              }
               this.click=false;
               this.searchState=2;
             });
@@ -91,17 +97,21 @@ export class SearchoverlayComponent implements OnInit {
             const dialogRef = this.dialog.open(PopupdialogComponent, dialogConfig);
             dialogRef.afterClosed().subscribe(result => {
               this.selectedCp = Object.assign([], result);
-              //console.log(this.selectedCp);
-              this.click=false;
-              this.searchState=2;
-              for(let i=0; i<this.cpAvail.carpark_data.length;i++){
-                if(this.cpAvail.carpark_data[i].carpark_number == this.selectedCp.carparkId){
-                  this.selectedCp.totalLots = this.cpAvail.carpark_data[i].carpark_info[0].total_lots;
-                  this.selectedCp.lotsAvail = this.cpAvail.carpark_data[i].carpark_info[0].lots_available;
+              if(this.selectedCp.message=="success"){
+                //console.log(this.selectedCp);
+                this.click=false;
+                this.searchState=2;
+                for(let i=0; i<this.cpAvail.carpark_data.length;i++){
+                  if(this.cpAvail.carpark_data[i].carpark_number == this.selectedCp.carparkId){
+                    this.selectedCp.totalLots = this.cpAvail.carpark_data[i].carpark_info[0].total_lots;
+                    this.selectedCp.lotsAvail = this.cpAvail.carpark_data[i].carpark_info[0].lots_available;
+                  }
                 }
+                this.selectedCp.parkingAvail = Math.round((this.selectedCp.lotsAvail / this.selectedCp.totalLots) * 100);
+                console.log(this.selectedCp.parkingAvail);
+              }else{
+                this.searchState=1;
               }
-              this.selectedCp.parkingAvail = Math.round((this.selectedCp.lotsAvail / this.selectedCp.totalLots) * 100);
-              console.log(this.selectedCp.parkingAvail);
             });
           });
         }
