@@ -109,7 +109,7 @@ export class SearchoverlayComponent implements OnInit {
                     this.selectedCp.lotsAvail = this.cpAvail.carpark_data[i].carpark_info[0].lots_available;
                   }
                 }
-                this.selectedCp.parkingAvail = Math.round((this.selectedCp.lotsAvail / this.selectedCp.totalLots) * 100);
+                this.selectedCp.parkingAvail = Math.round(((this.selectedCp.totalLots - this.selectedCp.lotsAvail) / this.selectedCp.totalLots) * 100);
                 //console.log(this.selectedCp.parkingAvail);
               }else if(this.selectedCp.message=="failed"){
                 this.searchState=1;
