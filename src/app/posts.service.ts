@@ -6,7 +6,8 @@ import { HttpClient } from '@angular/common/http';
 })
 export class PostsService {
   searchUrl = "https://developers.onemap.sg/commonapi/search?searchVal=";
-  searchCarparkUrl = "https://data.gov.sg/api/action/datastore_search?resource_id=139a3035-e624-4f56-b63f-89ae28d4ae4c&q="
+  searchCarparkUrl = "https://data.gov.sg/api/action/datastore_search?resource_id=139a3035-e624-4f56-b63f-89ae28d4ae4c&q=";
+  carparkAvailUrl = "https://api.data.gov.sg/v1/transport/carpark-availability";
   
   constructor(
     private http:HttpClient
@@ -18,6 +19,9 @@ export class PostsService {
   }
   public searchCarparkId(carparkId:string){
     return this.http.get(this.searchCarparkUrl.concat(carparkId));
+  }
+  public getCarparkAvailability(){
+    return this.http.get(this.carparkAvailUrl)
   }
 }
 

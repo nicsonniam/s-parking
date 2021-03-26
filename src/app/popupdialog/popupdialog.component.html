@@ -19,15 +19,16 @@
     <div style="padding-bottom: 30px;">
         <img  src="assets/locations.svg">
     </div>
-    <p style="font-weight: 300;">{{matchCount}} matche(s) found for <br><b>{{keyword}}</b></p>
+    <p *ngIf="matchCount===1" style="font-weight: 300;">{{matchCount}} match found for <br><b>{{keyword}}</b></p>
+    <p *ngIf="matchCount>1" style="font-weight: 300;">{{matchCount}} matches found for <br><b>{{keyword}}</b></p>
     <div *ngIf="type==='keyword'">
         <ul>
-            <li *ngFor="let result of searchResults" style="padding-top: 5px; padding-bottom: 10px;"><a (click)="clicked()" >{{result.ADDRESS}}</a></li>
+            <li *ngFor="let result of searchResults" style="padding-top: 5px; padding-bottom: 10px;"><a (click)="selectLocation(result.ADDRESS,type)" >{{result.ADDRESS}}</a></li>
         </ul>
     </div>
     <div *ngIf="type==='carparkid'">
         <ul>
-            <li *ngFor="let result of searchResults" style="padding-top: 5px; padding-bottom: 10px;"><a (click)="clicked()" >{{result.address}}</a></li>
+            <li *ngFor="let result of searchResults" style="padding-top: 5px; padding-bottom: 10px;"><a (click)="selectLocation(result.address,type)" >{{result.address}}</a></li>
         </ul>
     </div>
 </div>

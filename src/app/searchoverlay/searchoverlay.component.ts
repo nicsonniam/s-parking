@@ -10,6 +10,9 @@ import { PopupdialogComponent } from '../popupdialog/popupdialog.component';
 })
 export class SearchoverlayComponent implements OnInit {
   searchState: any;
+  selectedCp: any;
+  cpAvail: any;
+  cpAvailData: any;
   keyword: string;
   click: boolean = false;
   clickCount: number = 0;
@@ -17,13 +20,29 @@ export class SearchoverlayComponent implements OnInit {
   constructor(
     public postData:PostsService,
     public dialog:MatDialog
-  ) { }
+  ) {
+    this.searchState=0;
+    this.getCarparkAvailability();
+   }
  
   ngOnInit(): void {
-    this.searchState=0;
-  }   
+  } 
+  getCarparkAvailability(){
+    this.postData.getCarparkAvailability().subscribe((result)=>{
+      this.cpAvailData=Object.assign([],result);
+      this.cpAvail = this.cpAvailData.items[0];
+    });
+  }  
   getStarted(){
     this.searchState=1;
+  }
+  omit_special_char(event){   
+    var k;  
+    k = event.charCode;  //         k = event.keyCode;  (Both can be used)
+    return((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57)); 
+  }
+  back(){
+    this.searchState=0;
   }
   search(keyword:string,carparkId:string){
     this.click=true;
@@ -47,7 +66,9 @@ export class SearchoverlayComponent implements OnInit {
             dialogConfig.height = '380px';
             const dialogRef = this.dialog.open(PopupdialogComponent, dialogConfig);
             dialogRef.afterClosed().subscribe(result => {
+              console.log("Dialog output:", result);
               this.click=false;
+              this.searchState=2;
             });
           });  
         }
@@ -56,7 +77,7 @@ export class SearchoverlayComponent implements OnInit {
           alert("Please enter a valid search term or car park number.");
         }else{
           this.postData.searchCarparkId(carparkId.toUpperCase()).subscribe((result)=>{
-            var searchResult=Object.assign([], result); 
+            var searchResult=Object.assign([], result);  
             //console.log(searchResult);
             const dialogConfig = new MatDialogConfig;
             dialogConfig.autoFocus = true;
@@ -69,7 +90,18 @@ export class SearchoverlayComponent implements OnInit {
             dialogConfig.height = '380px';
             const dialogRef = this.dialog.open(PopupdialogComponent, dialogConfig);
             dialogRef.afterClosed().subscribe(result => {
+              this.selectedCp = Object.assign([], result);
+              //console.log(this.selectedCp);
               this.click=false;
+              this.searchState=2;
+              for(let i=0; i<this.cpAvail.carpark_data.length;i++){
+                if(this.cpAvail.carpark_data[i].carpark_number == this.selectedCp.carparkId){
+                  this.selectedCp.totalLots = this.cpAvail.carpark_data[i].carpark_info[0].total_lots;
+                  this.selectedCp.lotsAvail = this.cpAvail.carpark_data[i].carpark_info[0].lots_available;
+                }
+              }
+              this.selectedCp.parkingAvail = Math.round((this.selectedCp.lotsAvail / this.selectedCp.totalLots) * 100);
+              console.log(this.selectedCp.parkingAvail);
             });
           });
         }

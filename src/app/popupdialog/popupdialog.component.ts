@@ -20,7 +20,7 @@ export class PopupdialogComponent implements OnInit {
   ) 
   {
     this.noResults=false;
-    this.tooManyResults=false;
+    this.tooManyResults=false; 
     this.enoughResults=false;
     this.type = data.type;
     this.keyword = data.keyword;
@@ -44,7 +44,7 @@ export class PopupdialogComponent implements OnInit {
           this.searchResults.splice(i);
         }
       }
-      //console.log(this.searchResults);
+      console.log(this.searchResults);
       this.matchCount=this.searchResults.length;
       if(this.matchCount==0){
         this.noResults=true;
@@ -64,7 +64,33 @@ export class PopupdialogComponent implements OnInit {
   closeDialog() {
     this.dialogRef.close();
   }
-  clicked(){
-    alert("hello");
+  selectLocation(address:string,type:string){
+    if(type=="carparkid"){
+      for(let i=0;i<this.searchResults.length;i++){
+        var carparkId = this.searchResults[i].car_park_no;
+        var shortTermParking = this.searchResults[i].short_term_parking;
+        var carparkType = this.searchResults[i].car_park_type;
+        var nightParking = this.searchResults[i].night_parking;
+        var parkingSystemType = this.searchResults[i].type_of_parking_system;
+        var freeParking = this.searchResults[i].free_parking;
+      }
+      var data = {
+        address: address,
+        carparkId: carparkId,
+        shortTermParking: shortTermParking,
+        carparkType: carparkType,
+        nightParking: nightParking,
+        parkingSystemType: parkingSystemType,
+        freeParking :freeParking,
+        parkingAvail: 0,
+        totalLots: 0,
+        lotsAvail: 0
+      }
+      console.log(data);
+      this.dialogRef.close(data);
+    }else{
+      this.dialogRef.close(address);
+      alert("WIP");
+    }
   }
 }

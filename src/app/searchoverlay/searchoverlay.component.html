@@ -1,4 +1,4 @@
-<div class="centerdiv">
+<div *ngIf="searchState<2" class="centerdiv">
     <table>
         <tr>
             <td>
@@ -6,11 +6,11 @@
             </td>
             <td>
                 <div style="padding-left: 46.5px;padding-right: 46.5px;">
-                    <img  src="assets/vl.svg">
+                    <img src="assets/vl.svg">
                 </div>
             </td>
             <td>
-                <div style="width: 373px;" *ngIf="this.searchState==0">
+                <div style="width: 373px;" *ngIf="this.searchState===0">
                     <h1 style="font-size: 30px; padding-bottom: 17px;">Say goodbye to parking hell</h1>
                     <p style="font-size: 16px; font-weight: 300;">
                         S.Parking aims to provide users with real time
@@ -20,16 +20,16 @@
                     </p>
                     <button (click)="getStarted()">Get Started</button>
                 </div>
-                <div style="width: 373px;" *ngIf="this.searchState==1">
+                <div style="width: 373px;" *ngIf="this.searchState===1">
                     <h1 style="font-size: 30px; padding-bottom: 17px;">So, where you headed?</h1>
                     <p style="font-size: 16px; font-weight: 300; line-height:0px;">Search</p>
-                    <input #searchIp maxlength="50" type="text" placeholder="Address, Building Name etc. " style="width: 288px; height: 30px;" 
+                    <input #searchIp (keypress)="omit_special_char($event)" maxlength="50" type="text" placeholder="Address, Building Name etc. " style="width: 288px; height: 30px;" 
                     id="searchIp" onfocus="document.getElementById('cpNoIp').value = ''"/>
                     <div style="padding-top:25px; padding-bottom: 15px;">
                         <p style="font-size: 16px; font-weight: 300; line-height: 0px;">or</p>
                     </div>
                     <p style="font-size: 16px; font-weight: 300; line-height: 0;">Car Park No.</p>
-                    <input #cpNoIp maxlength="8" type="text" placeholder="E.g. Q123" style="width: 288px; height: 30px;" 
+                    <input #cpNoIp (keypress)="omit_special_char($event)" maxlength="8" type="text" placeholder="E.g. Q123" style="width: 288px; height: 30px;" 
                     id="cpNoIp" onfocus="document.getElementById('searchIp').value = ''"/>
                     <br>
                     <br>
@@ -38,4 +38,48 @@
             </td>
         </tr>
     </table>
+</div>
+<div *ngIf="searchState===2">
+    <div style="position:fixed;top:0;left:0;width:100%;height:100%;" >
+        <div style="width:100%; height:50px; background-color: #87BFFF;padding-left: 30%;padding-right: 30%; padding-top: 8px;">
+            <img style="height:33px;cursor: pointer;" src="assets/backarrow.svg" (click)="back()"/>
+        </div>
+        <div style="background-color: #A9D0FE; padding-left:31%; padding-top:25px; ">
+            <p style="font-size: 15px;">SELECTED</p>
+        </div>
+        <div style="border-radius: 35px; background-color: white;width: 40%; height: 235px;top: -10px;margin: 0 auto;position: relative;">
+            <div style="padding-left:30px; padding-top: 35px;">
+                <img src="assets/plogo.svg" style="float: left; width: 110px; height: 110px;"/>
+            </div>
+            <div style="padding-left: 25%;">
+                <p style="line-height: 1.2; font-size: 25px; color: #4D4E4E;">{{selectedCp.address}}</p>
+                <p style="line-height: 0.8;">{{selectedCp.lotsAvail}} of {{selectedCp.totalLots}} lots remaining</p>
+                <p style="line-height: 0.8;">{{selectedCp.carparkType}} - {{selectedCp.parkingSystemType}}</p>
+                <div style="float:right; padding-right: 50px;">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td>
+                                <img *ngIf="selectedCp.shortTermParking!=='NO'" src="assets/clock.svg">
+                                <img *ngIf="selectedCp.shortTermParking==='NO'" src="assets/clockdark.svg">
+                            </td>
+                            <td>
+                                <img *ngIf="selectedCp.freeParking!=='NO'" src="assets/dolla.svg">
+                                <img *ngIf="selectedCp.freeParking==='NO'" src="assets/dolladark.svg">
+                            </td>
+                            <td>
+                                <img *ngIf="selectedCp.nightParking!=='NO'" src="assets/night.svg">
+                                <img *ngIf="selectedCp.nightParking==='NO'" src="assets/nightdark.svg">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <img *ngIf="selectedCp.parkingAvail<21" src="assets/20.svg">
+                <img *ngIf="selectedCp.parkingAvail>20 && selectedCp.parkingAvail<41"src="assets/40.svg">
+                <img *ngIf="selectedCp.parkingAvail>40 && selectedCp.parkingAvail<61"src="assets/60.svg">
+                <img *ngIf="selectedCp.parkingAvail>60 && selectedCp.parkingAvail<81"src="assets/80.svg">
+                <img *ngIf="selectedCp.parkingAvail>80"src="assets/100.svg">
+            </div>
+           
+        </div>
+    </div>
 </div>
