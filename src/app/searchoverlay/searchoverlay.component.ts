@@ -67,13 +67,13 @@ export class SearchoverlayComponent implements OnInit {
             dialogConfig.height = '380px';
             const dialogRef = this.dialog.open(PopupdialogComponent, dialogConfig);
             dialogRef.afterClosed().subscribe(result => {
+              this.click=false;
               this.selectedAdd = Object.assign([], result);
               if(this.selectedAdd.message=="success"){
                 alert("Address found (WIP)")
               }else{
                 this.searchState=1;
               }
-              this.click=false;
               this.searchState=2;
             });
           });  
@@ -96,10 +96,10 @@ export class SearchoverlayComponent implements OnInit {
             dialogConfig.height = '380px';
             const dialogRef = this.dialog.open(PopupdialogComponent, dialogConfig);
             dialogRef.afterClosed().subscribe(result => {
+              this.click=false;
               this.selectedCp = Object.assign([], result);
               if(this.selectedCp.message=="success"){
                 //console.log(this.selectedCp);
-                this.click=false;
                 this.searchState=2;
                 for(let i=0; i<this.cpAvail.carpark_data.length;i++){
                   if(this.cpAvail.carpark_data[i].carpark_number == this.selectedCp.carparkId){
@@ -108,7 +108,7 @@ export class SearchoverlayComponent implements OnInit {
                   }
                 }
                 this.selectedCp.parkingAvail = Math.round((this.selectedCp.lotsAvail / this.selectedCp.totalLots) * 100);
-                console.log(this.selectedCp.parkingAvail);
+                //console.log(this.selectedCp.parkingAvail);
               }else{
                 this.searchState=1;
               }
