@@ -69,12 +69,14 @@ export class SearchoverlayComponent implements OnInit {
             dialogRef.afterClosed().subscribe(result => {
               this.click=false;
               this.selectedAdd = Object.assign([], result);
+              console.log(this.selectedAdd.message);
               if(this.selectedAdd.message=="success"){
-                alert("Address found (WIP)")
-              }else{
+                alert("Address found (WIP)");
+                this.searchState=1;
+                //this.searchState=2;
+              }else if(this.selectedAdd.message=="failed"){
                 this.searchState=1;
               }
-              this.searchState=2;
             });
           });  
         }
@@ -109,7 +111,7 @@ export class SearchoverlayComponent implements OnInit {
                 }
                 this.selectedCp.parkingAvail = Math.round((this.selectedCp.lotsAvail / this.selectedCp.totalLots) * 100);
                 //console.log(this.selectedCp.parkingAvail);
-              }else{
+              }else if(this.selectedCp.message=="failed"){
                 this.searchState=1;
               }
             });

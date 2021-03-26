@@ -62,12 +62,35 @@ export class PopupdialogComponent implements OnInit {
   ngOnInit(): void {
   }
   closeDialog() {
-    this.dialogRef.close();
+    var data = {
+      message: "failed",
+      address: null,
+      carparkId: null,
+      shortTermParking: null,
+      carparkType: null,
+      nightParking: null,
+      parkingSystemType: null,
+      freeParking :null,
+      parkingAvail: 0,
+      totalLots: 0,
+      lotsAvail: 0
+    }
+    this.dialogRef.close(data);
   }
   selectLocation(address:string,type:string){
     if(this.tooManyResults||this.noResults){
       var data = {
         message: "failed",
+        address: address,
+        carparkId: null,
+        shortTermParking: null,
+        carparkType: null,
+        nightParking: null,
+        parkingSystemType: null,
+        freeParking :null,
+        parkingAvail: 0,
+        totalLots: 0,
+        lotsAvail: 0
       }
       this.dialogRef.close(data);
     }else{
@@ -80,7 +103,7 @@ export class PopupdialogComponent implements OnInit {
           var parkingSystemType = this.searchResults[i].type_of_parking_system;
           var freeParking = this.searchResults[i].free_parking;
         }
-        var dataCPId = {
+        var data = {
           message: "success",
           address: address,
           carparkId: carparkId,
@@ -94,13 +117,22 @@ export class PopupdialogComponent implements OnInit {
           lotsAvail: 0
         }
         //console.log(dataCPId);
-        this.dialogRef.close(dataCPId);
-      }else{
-        var dataAdd = {
+        this.dialogRef.close(data);
+      }else if(type==="keyword"){
+        var data = {
           message: "success",
-          address: address
+          address: address,
+          carparkId: null,
+          shortTermParking: null,
+          carparkType: null,
+          nightParking: null,
+          parkingSystemType: null,
+          freeParking :null,
+          parkingAvail: 0,
+          totalLots: 0,
+          lotsAvail: 0
         }
-        this.dialogRef.close(dataAdd);
+        this.dialogRef.close(data);
       }
     }
   }
