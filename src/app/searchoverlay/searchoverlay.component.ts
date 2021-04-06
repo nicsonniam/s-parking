@@ -29,7 +29,6 @@ export class SearchoverlayComponent implements OnInit {
     public dialog:MatDialog
   ) {
     this.searchState=0;
-    this.resultNotIn=true;
     this.getCarparkAvailability();
     this.checkTime();
     this.getAllCarparks(); 
@@ -294,7 +293,6 @@ export class SearchoverlayComponent implements OnInit {
                 alert("no nearby HDB carparks found")
               }
               else{ //if multiple nearby carparks are found, trigger dialog to instruct user to select one
-                alert("break");
                 const dialogConfig = new MatDialogConfig;
                 dialogConfig.autoFocus = true;
                 dialogConfig.data = {

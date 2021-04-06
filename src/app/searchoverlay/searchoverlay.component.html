@@ -4,6 +4,38 @@
                                        'topnavbar-smallest':innerWidth<800}">
     <img style="height:33px;cursor: pointer;" src="assets/backarrow.svg" (click)="back()"/>
 </div>
+<div *ngIf="resultNotIn && innerWidth>900" style="text-align: center; position:absolute; width: 100%; height: 100%; padding-left: 25%; padding-right: 25%; padding-top: 5%;z-index:1;">
+    <br><br><br><br><br><br>
+    <div style="background-color: white; width: 100%; border-radius: 15px; ">
+        <br><br>
+        <p style="font-size:20px; font-weight: 300;">Loading... please wait</p>
+        <img src="assets/loading.png" style="height: 350px">
+    </div>
+</div>
+<div *ngIf="resultNotIn && innerWidth>700 && innerWidth<899" style=" text-align: center; position:absolute; height: 100%; width: 100%; padding-left: 25%; padding-right: 25%; padding-top: 5%;z-index:1;">
+    <br><br><br><br><br><br><br><br><br><br>
+    <div style="background-color: white; width: 100%; border-radius: 15px; ">
+        <br><br>
+        <p style="font-size:20px; font-weight: 300;">Loading... please wait</p>
+        <img src="assets/loading.png" style="height: 250px">
+    </div>
+</div>
+<div *ngIf="resultNotIn && innerWidth<699 && innerWidth>379" style=" text-align: center; position:absolute; width: 100%; height: 100%; padding-left: 15%; padding-right: 15%; padding-top: 5%;z-index:1;">
+    <br><br><br><br><br><br><br><br><br>
+    <div style="background-color: white; width: 100%; border-radius: 15px; ">
+        <br><br>
+        <p style="font-size:18px; font-weight: 300;">Loading... please wait</p>
+        <img src="assets/loading.png" style="height: 250px">
+    </div>
+</div>
+<div *ngIf="resultNotIn && innerWidth<380" style=" text-align: center; position:absolute; width: 100%; height: 100%; padding-left: 15%; padding-right: 15%; padding-top: 5%;z-index:1;">
+    <br><br><br><br><br><br><br>
+    <div style="background-color: white; width: 100%; border-radius: 15px; ">
+        <br><br>
+        <p style="font-size:16px; font-weight: 300;">Loading... please wait</p>
+        <img src="assets/loading.png" style="height: 150px">
+    </div>
+</div>
 <div [ngClass]="{'maindiv-day':day&&innerWidth>1554,
                  'maindiv-night':night&&innerWidth>1554,
                  'maindiv-day-smaller':day&&innerWidth>1047&&innerWidth<1555,
@@ -12,13 +44,6 @@
                  'maindiv-night-evensmaller':night&&innerWidth>799&&innerWidth<1048,
                  'maindiv-day-smallest':day&&innerWidth<800,
                  'maindiv-night-smallest':night&&innerWidth<800}">
-    <div *ngIf="resultNotIn" style=" text-align: center; position:absolute; width: 100%; padding-left: 35%; padding-top: 10%;z-index:1;">
-        <div style="background-color: white; width: 40%; border-radius: 15px; ">
-            <br><br>
-            <p style="font-size:20px; font-weight: 300;">Loading... please wait</p>
-            <img src="assets/loading.png" style="height: auto">
-        </div>
-    </div>
     <div *ngIf="searchState<2" class="centerdiv">
         <table>
             <tr *ngIf="innerWidth>999">
