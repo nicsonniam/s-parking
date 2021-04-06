@@ -36,10 +36,10 @@
         <img src="assets/loading.png" style="height: 150px">
     </div>
 </div>
-<div [ngClass]="{'maindiv-day':day&&innerWidth>1554,
-                 'maindiv-day-smaller':day&&innerWidth>1047&&innerWidth<1555,
-                 'maindiv-day-evensmaller':day&&innerWidth>799&&innerWidth<1048,
-                 'maindiv-day-smallest':day&&innerWidth<800}">
+<div [ngClass]="{'maindiv-day':innerWidth>1554,
+                 'maindiv-day-smaller':innerWidth>1047&&innerWidth<1555,
+                 'maindiv-day-evensmaller':innerWidth>799&&innerWidth<1048,
+                 'maindiv-day-smallest':innerWidth<800}">
     <div *ngIf="searchState<2" class="centerdiv">
         <table>
             <tr *ngIf="innerWidth>999">
