@@ -7,7 +7,7 @@
         <img  src="assets/search.svg">
     </div>
     <div style="overflow-wrap: break-word;">
-        <p *ngIf="noResults" style="font-weight: 300;">Sorry, we couldn't find any matches for: <b>{{keyword}}</b></p>
+        <p *ngIf="noResults"  style="font-weight: 300;">Sorry, we couldn't find any matches for: <b>{{keyword}}</b></p>
         <p *ngIf="noResults && type==='keyword'" style="font-weight: 400;">Please try searching with another term</p>
         <p *ngIf="noResults && type==='carparkid'" style="font-weight: 400;">Please try using another carpark number</p>
         <p *ngIf="tooManyResults" style="font-weight: 300;">Oops, it seems like there are too many matches for: <br><b>{{keyword}}</b></p>
@@ -29,6 +29,18 @@
     <div *ngIf="type==='carparkid'">
         <ul>
             <li *ngFor="let result of searchResults" style="padding-top: 5px; padding-bottom: 10px;"><a (click)="selectLocation(result.address,type)" >{{result.address}}</a></li>
+        </ul>
+    </div>
+</div>
+<div *ngIf="type==='selectCarpark'" style="text-align: center; padding-left: 15%;padding-right: 15%;">
+    <br>
+    <div style="padding-bottom: 30px;">
+        <img  src="assets/locations.svg">
+    </div>
+    <p style="font-weight: 300;">{{matchCount}} carparks found 
+    <div>
+        <ul>
+            <li *ngFor="let result of searchResults" style="padding-top: 5px; padding-bottom: 10px;"><a (click)="selectCarpark(result)" >{{result.address}}</a></li>
         </ul>
     </div>
 </div>

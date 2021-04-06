@@ -1,85 +1,503 @@
-<div *ngIf="searchState<2" class="centerdiv">
-    <table>
-        <tr>
-            <td>
-                <img style="height: 352px;width: 352px;" src="assets/SParking.svg">
-            </td>
-            <td>
-                <div style="padding-left: 46.5px;padding-right: 46.5px;">
-                    <img src="assets/vl.svg">
-                </div>
-            </td>
-            <td>
-                <div style="width: 373px;" *ngIf="this.searchState===0">
-                    <h1 style="font-size: 30px; padding-bottom: 17px;">Say goodbye to parking hell</h1>
-                    <p style="font-size: 16px; font-weight: 300;">
-                        S.Parking aims to provide users with real time
-                        parking updates for all HDB carparks, along with
-                        suggesting possible alternatives for parking at
-                        various places of interest in Singapore.
-                    </p>
-                    <button (click)="getStarted()">Get Started</button>
-                </div>
-                <div style="width: 373px;" *ngIf="this.searchState===1">
-                    <h1 style="font-size: 30px; padding-bottom: 17px;">So, where you headed?</h1>
-                    <p style="font-size: 16px; font-weight: 300; line-height:0px;">Search</p>
-                    <input #searchIp (keypress)="omit_special_char($event)" maxlength="50" type="text" placeholder="Address, Building Name etc. " style="width: 288px; height: 30px;" 
-                    id="searchIp" onfocus="document.getElementById('cpNoIp').value = ''"/>
-                    <div style="padding-top:25px; padding-bottom: 15px;">
-                        <p style="font-size: 16px; font-weight: 300; line-height: 0px;">or</p>
-                    </div>
-                    <p style="font-size: 16px; font-weight: 300; line-height: 0;">Car Park No.</p>
-                    <input #cpNoIp (keypress)="omit_special_char($event)" maxlength="8" type="text" placeholder="E.g. Q123" style="width: 288px; height: 30px;" 
-                    id="cpNoIp" onfocus="document.getElementById('searchIp').value = ''"/>
-                    <br>
-                    <br>
-                    <button [disabled]="click" (click)="search(searchIp.value,cpNoIp.value)">Search</button>
-                </div>  
-            </td>
-        </tr>
-    </table>
+<div *ngIf="searchState>1" [ngClass]="{'topnavbar':innerWidth>1554,
+                                       'topnavbar-smaller':innerWidth>1047&&innerWidth<1555,
+                                       'topnavbar-evensmaller':innerWidth>799&&innerWidth<1048,
+                                       'topnavbar-smallest':innerWidth<800}">
+    <img style="height:33px;cursor: pointer;" src="assets/backarrow.svg" (click)="back()"/>
 </div>
-<div *ngIf="searchState===2">
-    <div style="position:fixed;top:0;left:0;width:100%;height:100%;" >
-        <div style="width:100%; height:50px; background-color: #87BFFF;padding-left: 30%;padding-right: 30%; padding-top: 8px;">
-            <img style="height:33px;cursor: pointer;" src="assets/backarrow.svg" (click)="back()"/>
+<div [ngClass]="{'maindiv-day':day&&innerWidth>1554,
+                 'maindiv-night':night&&innerWidth>1554,
+                 'maindiv-day-smaller':day&&innerWidth>1047&&innerWidth<1555,
+                 'maindiv-night-smaller':night&&innerWidth>1047&&innerWidth<1555,
+                 'maindiv-day-evensmaller':day&&innerWidth>799&&innerWidth<1048,
+                 'maindiv-night-evensmaller':night&&innerWidth>799&&innerWidth<1048,
+                 'maindiv-day-smallest':day&&innerWidth<800,
+                 'maindiv-night-smallest':night&&innerWidth<800}">
+    <div *ngIf="resultNotIn" style=" text-align: center; position:absolute; width: 100%; padding-left: 35%; padding-top: 10%;z-index:1;">
+        <div style="background-color: white; width: 40%; border-radius: 15px; ">
+            <br><br>
+            <p style="font-size:20px; font-weight: 300;">Loading... please wait</p>
+            <img src="assets/loading.png" style="height: auto">
         </div>
-        <div style="background-color: #A9D0FE; padding-left:31%; padding-top:25px; ">
-            <p style="font-size: 15px;">SELECTED</p>
-        </div>
-        <div style="border-radius: 35px; background-color: white;width: 40%; height: 235px;top: -10px;margin: 0 auto;position: relative;">
-            <div style="padding-left:30px; padding-top: 35px;">
-                <img src="assets/plogo.svg" style="float: left; width: 110px; height: 110px;"/>
-            </div>
-            <div style="padding-left: 25%;">
-                <p style="line-height: 1.2; font-size: 25px; color: #4D4E4E;">{{selectedCp.address}}</p>
-                <p style="line-height: 0.8;">{{selectedCp.lotsAvail}} of {{selectedCp.totalLots}} lots remaining</p>
-                <p style="line-height: 0.8;">{{selectedCp.carparkType}} - {{selectedCp.parkingSystemType}}</p>
-                <div style="float:right; padding-right: 50px;">
-                    <table style="width: 100%;">
-                        <tr>
-                            <td>
-                                <img *ngIf="selectedCp.shortTermParking!=='NO'" src="assets/clock.svg">
-                                <img *ngIf="selectedCp.shortTermParking==='NO'" src="assets/clockdark.svg">
-                            </td>
-                            <td>
-                                <img *ngIf="selectedCp.freeParking!=='NO'" src="assets/dolla.svg">
-                                <img *ngIf="selectedCp.freeParking==='NO'" src="assets/dolladark.svg">
-                            </td>
-                            <td>
-                                <img *ngIf="selectedCp.nightParking!=='NO'" src="assets/night.svg">
-                                <img *ngIf="selectedCp.nightParking==='NO'" src="assets/nightdark.svg">
-                            </td>
-                        </tr>
-                    </table>
+    </div>
+    <div *ngIf="searchState<2" class="centerdiv">
+        <table>
+            <tr *ngIf="innerWidth>999">
+                <td>
+                    <img style="height: 352px;width: 352px;" src="assets/SParking.svg">
+                </td>
+                <td>
+                    <div style="padding-left: 46.5px;padding-right: 46.5px;">
+                        <img src="assets/vl.svg">
+                    </div>
+                </td>
+                <td>
+                    <div style="width: 373px;" *ngIf="this.searchState===0">
+                        <h1 style="font-size: 30px; padding-bottom: 17px;">Say goodbye to parking hell</h1>
+                        <p style="font-size: 16px; font-weight: 300;">
+                            S.Parking aims to provide users with real time
+                            parking updates for all HDB carparks, along with
+                            suggesting possible alternatives for parking at
+                            various places of interest in Singapore.
+                        </p>
+                        <button (click)="getStarted()">Get Started</button>
+                    </div>
+                    <div style="width: 373px;" *ngIf="this.searchState===1">
+                        <h1 style="font-size: 30px; padding-bottom: 17px;">So, where you headed?</h1>
+                        <p style="font-size: 16px; font-weight: 300; line-height:0px;">Search</p>
+                        <input #searchIp (keypress)="omit_special_char($event)" maxlength="50" type="text" placeholder="Address, Building Name etc. " style="width: 288px; height: 30px;" 
+                        id="searchIp" onfocus="document.getElementById('cpNoIp').value = ''"/>
+                        <div style="padding-top:25px; padding-bottom: 15px;">
+                            <p style="font-size: 16px; font-weight: 300; line-height: 0px;">or</p>
+                        </div>
+                        <p style="font-size: 16px; font-weight: 300; line-height: 0;">Car Park No.</p>
+                        <input #cpNoIp (keypress)="omit_special_char($event)" maxlength="6" type="text" placeholder="E.g. Q123" style="width: 288px; height: 30px;" 
+                        id="cpNoIp" onfocus="document.getElementById('searchIp').value = ''"/>
+                        <br>
+                        <br>
+                        <button [disabled]="this.click" (click)="search(searchIp.value,cpNoIp.value)">Search</button>
+                    </div>  
+                </td>
+            </tr>
+            <tr *ngIf="innerWidth<1000 && innerWidth>399">
+                <td style="text-align: center;">
+                    <img style="height: 350px;width: 350px;" src="assets/SParking.svg">
+                    <br>
+                    <div style="width: 350px;" *ngIf="this.searchState===0">
+                        <h1 style="font-size: 26px; padding-bottom: 17px; text-align: left;">Say goodbye to parking hell</h1>
+                        <p style="font-size: 16px; font-weight: 300;text-align: left; ">
+                            S.Parking aims to provide users with real time
+                            parking updates for all HDB carparks, along with
+                            suggesting possible alternatives for parking at
+                            various places of interest in Singapore.
+                        </p>
+                        <br><br><br>
+                        <div style="text-align: right;">
+                            <button (click)="getStarted()">Get Started</button>                       
+                        </div>
+                    </div>
+                    <div style="width: 350px; text-align: left;" *ngIf="this.searchState===1">
+                        <h1 style="font-size: 30px; padding-bottom: 17px;">So, where you headed?</h1>
+                        <p style="font-size: 16px; font-weight: 300; line-height:0px;">Search</p>
+                        <input #searchIp (keypress)="omit_special_char($event)" maxlength="50" type="text" placeholder="Address, Building Name etc. " style="width: 300px; height: 30px;" 
+                        id="searchIp" onfocus="document.getElementById('cpNoIp').value = ''"/>
+                        <div style="padding-top:25px; padding-bottom: 15px;">
+                            <p style="font-size: 16px; font-weight: 300; line-height: 0px;">or</p>
+                        </div>
+                        <p style="font-size: 16px; font-weight: 300; line-height: 0;">Car Park No.</p>
+                        <input #cpNoIp (keypress)="omit_special_char($event)" maxlength="6" type="text" placeholder="E.g. Q123" style="width: 300px; height: 30px;" 
+                        id="cpNoIp" onfocus="document.getElementById('searchIp').value = ''"/>
+                        <br>
+                        <br>
+                        <div style="text-align: right; padding-right: 15%;">
+                            <button [disabled]="this.click" (click)="search(searchIp.value,cpNoIp.value)">Search</button>
+                        </div>
+                    </div> 
+                </td>
+            </tr>
+            <tr *ngIf="innerWidth<400">
+                <td style="text-align: center;">
+                    <img style="height: 240px;width: 240px;" src="assets/SParking.svg">
+                    <div style="width: 240px;" *ngIf="this.searchState===0">
+                        <h1 style="text-align: left; font-size: 22px; padding-bottom: 17px;">Say goodbye to parking hell</h1>
+                        <p style="text-align: left; font-size: 15px; font-weight: 300;">
+                            S.Parking aims to provide users with real time
+                            parking updates for all HDB carparks, along with
+                            suggesting possible alternatives for parking at
+                            various places of interest in Singapore.
+                        </p>
+                        <br>
+                        <div style="text-align: right;">
+                            <button (click)="getStarted()">Get Started</button>
+                        </div>
+                    </div>
+                    <div style="width: 240px; text-align: left;" *ngIf="this.searchState===1">
+                        <h1 style="font-size: 22px; padding-bottom: 17px;">So, where you headed?</h1>
+                        <p style="font-size: 15px; font-weight: 300; line-height:0px;">Search</p>
+                        <input #searchIp (keypress)="omit_special_char($event)" maxlength="50" type="text" placeholder="Address, Building Name etc. " style="width: 235px; height: 28px;" 
+                        id="searchIp" onfocus="document.getElementById('cpNoIp').value = ''"/>
+                        <div style="padding-top:25px; padding-bottom: 15px;">
+                            <p style="font-size: 15px; font-weight: 300; line-height: 0px;">or</p>
+                        </div>
+                        <p style="font-size: 15px; font-weight: 300; line-height: 0;">Car Park No.</p>
+                        <input #cpNoIp (keypress)="omit_special_char($event)" maxlength="6" type="text" placeholder="E.g. Q123" style="width: 235px; height: 28px;" 
+                        id="cpNoIp" onfocus="document.getElementById('searchIp').value = ''"/>
+                        <br>
+                        <br>
+                        <div style="text-align: right; ">
+                            <button [disabled]="this.click" (click)="search(searchIp.value,cpNoIp.value)">Search</button>
+                        </div>
+                    </div> 
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div *ngIf="searchState===2 && innerWidth>634"> 
+        <br>
+        <div style="width: 100%;">
+            <p style="font-size: 15px; padding-left: 18px;">SELECTED</p>
+            <div style="border-radius: 35px; background-color: white;  height: 235px;">
+                <div style="padding-left:30px; padding-top: 35px;">
+                    <img src="assets/plogo.svg" style="float: left; width: 110px; height: 110px;"/>
                 </div>
-                <img *ngIf="selectedCp.parkingAvail<21" src="assets/20.svg">
-                <img *ngIf="selectedCp.parkingAvail>20 && selectedCp.parkingAvail<41"src="assets/40.svg">
-                <img *ngIf="selectedCp.parkingAvail>40 && selectedCp.parkingAvail<61"src="assets/60.svg">
-                <img *ngIf="selectedCp.parkingAvail>60 && selectedCp.parkingAvail<81"src="assets/80.svg">
-                <img *ngIf="selectedCp.parkingAvail>80"src="assets/100.svg">
+                <div style="padding-left: 25%; padding-right: 4%;">
+                    <p style="line-height: 1.2; font-size: 25px; color: #4D4E4E;">{{selectedCp.address}}</p>
+                    <p *ngIf="selectedCp.totalLots!==0" style="line-height: 0.8;">{{selectedCp.lotsAvail}} of {{selectedCp.totalLots}} lots remaining</p>
+                    <p *ngIf="selectedCp.totalLots===0" style="line-height: 0.8;">No data available</p>
+                    <p style="line-height: 0.8;">{{selectedCp.carparkType}} - {{selectedCp.parkingSystemType}}</p>
+                    <div style="float:right; padding-right: 20px;">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td>
+                                    <img title="Short-term parking: {{selectedCp.shortTermParking}}" *ngIf="selectedCp.shortTermParking!=='NO'" src="assets/clock.svg">
+                                    <img title="Short-term parking: {{selectedCp.shortTermParking}}" *ngIf="selectedCp.shortTermParking==='NO'" src="assets/clockdark.svg">
+                                </td>
+                                <td>
+                                    <img title="Free parking: {{selectedCp.freeParking}}" *ngIf="selectedCp.freeParking!=='NO'" src="assets/dolla.svg">
+                                    <img title="Free parking: {{selectedCp.freeParking}}" *ngIf="selectedCp.freeParking==='NO'" src="assets/dolladark.svg">
+                                </td>
+                                <td>
+                                    <img title="Night parking: {{selectedCp.nightParking}}" *ngIf="selectedCp.nightParking!=='NO'" src="assets/night.svg">
+                                    <img title="Night parking: {{selectedCp.nightParking}}" *ngIf="selectedCp.nightParking==='NO'" src="assets/nightdark.svg">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <img *ngIf="selectedCp.parkingAvail<1" src="assets/0.svg">
+                    <img *ngIf="selectedCp.parkingAvail>1 && selectedCp.parkingAvail<11"src="assets/10.svg">
+                    <img *ngIf="selectedCp.parkingAvail>10 && selectedCp.parkingAvail<21"src="assets/20.svg">
+                    <img *ngIf="selectedCp.parkingAvail>20 && selectedCp.parkingAvail<31"src="assets/30.svg">
+                    <img *ngIf="selectedCp.parkingAvail>30 && selectedCp.parkingAvail<41"src="assets/40.svg">
+                    <img *ngIf="selectedCp.parkingAvail>40 && selectedCp.parkingAvail<51"src="assets/50.svg">
+                    <img *ngIf="selectedCp.parkingAvail>50 && selectedCp.parkingAvail<61"src="assets/60.svg">
+                    <img *ngIf="selectedCp.parkingAvail>60 && selectedCp.parkingAvail<71"src="assets/70.svg">
+                    <img *ngIf="selectedCp.parkingAvail>70 && selectedCp.parkingAvail<81"src="assets/80.svg">
+                    <img *ngIf="selectedCp.parkingAvail>80 && selectedCp.parkingAvail<91"src="assets/90.svg">
+                    <img *ngIf="selectedCp.parkingAvail>90"src="assets/100.svg">
+                </div>
             </div>
-           
+            <br>
+        <br>
+        <p *ngIf="nearbyCp.length!=0" style="font-size: 15px; padding-left: 18px;">NEARBY</p>
+        <div *ngFor="let cp of nearbyCp">
+            <div style="border-radius: 35px; background-color: white;  height: 235px;">
+                <div style="padding-left:30px; padding-top: 35px;">
+                    <img src="assets/plogo.svg" style="float: left; width: 110px; height: 110px;"/>
+                </div>
+                <div style="padding-left: 25%; padding-right: 4%;">
+                    <p style="line-height: 1.2; font-size: 25px; color: #4D4E4E;">{{cp.address}}</p>
+                    <p *ngIf="cp.totalLots!==0" style="line-height: 0.8;">{{cp.lotsAvail}} of {{cp.totalLots}} lots remaining</p>
+                    <p *ngIf="cp.totalLots===0" style="line-height: 0.8;">No data available</p>
+                    <p style="line-height: 0.8;">{{cp.carparkType}} - {{cp.parkingSystemType}}</p>
+                    <div style="float:right; padding-right: 20px;">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td>
+                                    <img title="Short-term parking: {{selectedCp.shortTermParking}}" *ngIf="cp.shortTermParking!=='NO'" src="assets/clock.svg">
+                                    <img title="Short-term parking: {{selectedCp.shortTermParking}}" *ngIf="cp.shortTermParking==='NO'" src="assets/clockdark.svg">
+                                </td>
+                                <td>
+                                    <img title="Free parking: {{selectedCp.freeParking}}" *ngIf="cp.freeParking!=='NO'" src="assets/dolla.svg">
+                                    <img title="Free parking: {{selectedCp.freeParking}}" *ngIf="cp.freeParking==='NO'" src="assets/dolladark.svg">
+                                </td>
+                                <td>
+                                    <img title="Night parking: {{selectedCp.nightParking}}" *ngIf="cp.nightParking!=='NO'" src="assets/night.svg">
+                                    <img title="Night parking: {{selectedCp.nightParking}}" *ngIf="cp.nightParking==='NO'" src="assets/nightdark.svg">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <img *ngIf="cp.parkingAvail<1" src="assets/0.svg">
+                    <img *ngIf="cp.parkingAvail>1 && cp.parkingAvail<11"src="assets/10.svg">
+                    <img *ngIf="cp.parkingAvail>10 && cp.parkingAvail<21"src="assets/20.svg">
+                    <img *ngIf="cp.parkingAvail>20 && cp.parkingAvail<31"src="assets/30.svg">
+                    <img *ngIf="cp.parkingAvail>30 && cp.parkingAvail<41"src="assets/40.svg">
+                    <img *ngIf="cp.parkingAvail>40 && cp.parkingAvail<51"src="assets/50.svg">
+                    <img *ngIf="cp.parkingAvail>50 && cp.parkingAvail<61"src="assets/60.svg">
+                    <img *ngIf="cp.parkingAvail>60 && cp.parkingAvail<71"src="assets/70.svg">
+                    <img *ngIf="cp.parkingAvail>70 && cp.parkingAvail<81"src="assets/80.svg">
+                    <img *ngIf="cp.parkingAvail>80 && cp.parkingAvail<91"src="assets/90.svg">
+                    <img *ngIf="cp.parkingAvail>90"src="assets/100.svg">
+                </div>
+            </div>
+            <br><br>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="searchState===2 && innerWidth>499 && innerWidth<635"> 
+        <br>
+        <div style="width: 100%;">
+            <p style="font-size: 13px; padding-left: 18px;">SELECTED</p>
+            <div style="border-radius: 35px; background-color: white;  height: 200px;">
+                <div style="padding-left:30px; padding-top: 35px;">
+                    <img src="assets/plogo.svg" style="float: left; width: 80px; height: 80px;"/>
+                </div>
+                <div style="padding-left: 25%; padding-right: 4%;">
+                    <p style="line-height: 1.2; font-size: 20px; color: #4D4E4E;">{{selectedCp.address}}</p>
+                    <p *ngIf="selectedCp.totalLots!==0" style="line-height: 0.8; font-size: 0.8rem;">{{selectedCp.lotsAvail}} of {{selectedCp.totalLots}} lots remaining</p>
+                    <p *ngIf="selectedCp.totalLots===0" style="line-height: 0.8; font-size: 0.8rem;">No data available</p>
+                    <p style="line-height: 0.8; font-size: 0.8rem;">{{selectedCp.carparkType}} - {{selectedCp.parkingSystemType}}</p>
+                    <div style="float:right; padding-right: 20px;">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td>
+                                    <img style="height: 28px;" title="Short-term parking: {{selectedCp.shortTermParking}}" *ngIf="selectedCp.shortTermParking!=='NO'" src="assets/clock.svg">
+                                    <img style="height: 28px;" title="Short-term parking: {{selectedCp.shortTermParking}}" *ngIf="selectedCp.shortTermParking==='NO'" src="assets/clockdark.svg">
+                                </td>
+                                <td>
+                                    <img style="height: 28px;" title="Free parking: {{selectedCp.freeParking}}" *ngIf="selectedCp.freeParking!=='NO'" src="assets/dolla.svg">
+                                    <img style="height: 28px;" title="Free parking: {{selectedCp.freeParking}}" *ngIf="selectedCp.freeParking==='NO'" src="assets/dolladark.svg">
+                                </td>
+                                <td>
+                                    <img style="height: 28px;" title="Night parking: {{selectedCp.nightParking}}" *ngIf="selectedCp.nightParking!=='NO'" src="assets/night.svg">
+                                    <img style="height: 28px;" title="Night parking: {{selectedCp.nightParking}}" *ngIf="selectedCp.nightParking==='NO'" src="assets/nightdark.svg">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <img style="height: 16px;" *ngIf="selectedCp.parkingAvail<1" src="assets/0.svg">
+                    <img style="height: 16px;" *ngIf="selectedCp.parkingAvail>1 && selectedCp.parkingAvail<11"src="assets/10.svg">
+                    <img style="height: 16px;" *ngIf="selectedCp.parkingAvail>10 && selectedCp.parkingAvail<21"src="assets/20.svg">
+                    <img style="height: 16px;" *ngIf="selectedCp.parkingAvail>20 && selectedCp.parkingAvail<31"src="assets/30.svg">
+                    <img style="height: 16px;" *ngIf="selectedCp.parkingAvail>30 && selectedCp.parkingAvail<41"src="assets/40.svg">
+                    <img style="height: 16px;" *ngIf="selectedCp.parkingAvail>40 && selectedCp.parkingAvail<51"src="assets/50.svg">
+                    <img style="height: 16px;" *ngIf="selectedCp.parkingAvail>50 && selectedCp.parkingAvail<61"src="assets/60.svg">
+                    <img style="height: 16px;" *ngIf="selectedCp.parkingAvail>60 && selectedCp.parkingAvail<71"src="assets/70.svg">
+                    <img style="height: 16px;" *ngIf="selectedCp.parkingAvail>70 && selectedCp.parkingAvail<81"src="assets/80.svg">
+                    <img style="height: 16px;" *ngIf="selectedCp.parkingAvail>80 && selectedCp.parkingAvail<91"src="assets/90.svg">
+                    <img style="height: 16px;" *ngIf="selectedCp.parkingAvail>90"src="assets/100.svg">
+                </div>
+            </div>
+            <br>
+        <br>
+        <p *ngIf="nearbyCp.length!=0" style="font-size: 15px; padding-left: 18px;">NEARBY</p>
+        <div *ngFor="let cp of nearbyCp">
+            <div style="border-radius: 35px; background-color: white;  height: 200px;">
+                <div style="padding-left:30px; padding-top: 35px;">
+                    <img src="assets/plogo.svg" style="float: left; width: 80px; height: 80px;"/>
+                </div>
+                <div style="padding-left: 25%; padding-right: 4%;">
+                    <p style="line-height: 1.2; font-size: 20px; color: #4D4E4E;">{{cp.address}}</p>
+                    <p *ngIf="cp.totalLots!==0" style="line-height: 0.8; font-size: 0.8rem;">{{cp.lotsAvail}} of {{cp.totalLots}} lots remaining</p>
+                    <p *ngIf="cp.totalLots===0" style="line-height: 0.8; font-size: 0.8rem;">No data available</p>
+                    <p style="line-height: 0.8; font-size: 0.8rem;">{{cp.carparkType}} - {{cp.parkingSystemType}}</p>
+                    <div style="float:right; padding-right: 20px;">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td>
+                                    <img style="height: 28px;" title="Short-term parking: {{selectedCp.shortTermParking}}" *ngIf="cp.shortTermParking!=='NO'" src="assets/clock.svg">
+                                    <img style="height: 28px;" title="Short-term parking: {{selectedCp.shortTermParking}}" *ngIf="cp.shortTermParking==='NO'" src="assets/clockdark.svg">
+                                </td>
+                                <td>
+                                    <img style="height: 28px;" title="Free parking: {{selectedCp.freeParking}}" *ngIf="cp.freeParking!=='NO'" src="assets/dolla.svg">
+                                    <img style="height: 28px;" title="Free parking: {{selectedCp.freeParking}}" *ngIf="cp.freeParking==='NO'" src="assets/dolladark.svg">
+                                </td>
+                                <td>
+                                    <img style="height: 28px;" title="Night parking: {{selectedCp.nightParking}}" *ngIf="cp.nightParking!=='NO'" src="assets/night.svg">
+                                    <img style="height: 28px;" title="Night parking: {{selectedCp.nightParking}}" *ngIf="cp.nightParking==='NO'" src="assets/nightdark.svg">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <img style="height: 16px;" *ngIf="cp.parkingAvail<1" src="assets/0.svg">
+                    <img style="height: 16px;" *ngIf="cp.parkingAvail>1 && cp.parkingAvail<11"src="assets/10.svg">
+                    <img style="height: 16px;" *ngIf="cp.parkingAvail>10 && cp.parkingAvail<21"src="assets/20.svg">
+                    <img style="height: 16px;" *ngIf="cp.parkingAvail>20 && cp.parkingAvail<31"src="assets/30.svg">
+                    <img style="height: 16px;" *ngIf="cp.parkingAvail>30 && cp.parkingAvail<41"src="assets/40.svg">
+                    <img style="height: 16px;" *ngIf="cp.parkingAvail>40 && cp.parkingAvail<51"src="assets/50.svg">
+                    <img style="height: 16px;" *ngIf="cp.parkingAvail>50 && cp.parkingAvail<61"src="assets/60.svg">
+                    <img style="height: 16px;" *ngIf="cp.parkingAvail>60 && cp.parkingAvail<71"src="assets/70.svg">
+                    <img style="height: 16px;" *ngIf="cp.parkingAvail>70 && cp.parkingAvail<81"src="assets/80.svg">
+                    <img style="height: 16px;" *ngIf="cp.parkingAvail>80 && cp.parkingAvail<91"src="assets/90.svg">
+                    <img style="height: 16px;" *ngIf="cp.parkingAvail>90"src="assets/100.svg">
+                </div>
+            </div>
+            <br><br>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="searchState===2 && innerWidth>364 &&innerWidth<500"> 
+        <br>
+        <div style="width: 100%;">
+            <p style="font-size: 10px; padding-left: 18px;">SELECTED</p>
+            <div style="border-radius: 35px; background-color: white;  height: 150px;">
+                <div style="padding-left:10px; padding-top: 25px;">
+                    <img src="assets/plogo.svg" style="float: left; width: 50px; height: 50px;"/>
+                </div>
+                <div style="padding-left: 18%; padding-right: 4%;">
+                    <p style="line-height: 1.2; font-size: 15px; color: #4D4E4E;">{{selectedCp.address}}</p>
+                    <p *ngIf="selectedCp.totalLots!==0" style="line-height: 0.8; font-size: 0.6rem;">{{selectedCp.lotsAvail}} of {{selectedCp.totalLots}} lots remaining</p>
+                    <p *ngIf="selectedCp.totalLots===0" style="line-height: 0.8; font-size: 0.6rem;">No data available</p>
+                    <p style="line-height: 0.8; font-size: 0.6rem;">{{selectedCp.carparkType}} - {{selectedCp.parkingSystemType}}</p>
+                    <div style="float:right; padding-right: 10px;">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td>
+                                    <img style="height: 22px;" title="Short-term parking: {{selectedCp.shortTermParking}}" *ngIf="selectedCp.shortTermParking!=='NO'" src="assets/clock.svg">
+                                    <img style="height: 22px;" title="Short-term parking: {{selectedCp.shortTermParking}}" *ngIf="selectedCp.shortTermParking==='NO'" src="assets/clockdark.svg">
+                                </td>
+                                <td>
+                                    <img style="height: 22px;" title="Free parking: {{selectedCp.freeParking}}" *ngIf="selectedCp.freeParking!=='NO'" src="assets/dolla.svg">
+                                    <img style="height: 22px;" title="Free parking: {{selectedCp.freeParking}}" *ngIf="selectedCp.freeParking==='NO'" src="assets/dolladark.svg">
+                                </td>
+                                <td>
+                                    <img style="height: 22px;" title="Night parking: {{selectedCp.nightParking}}" *ngIf="selectedCp.nightParking!=='NO'" src="assets/night.svg">
+                                    <img style="height: 22px;" title="Night parking: {{selectedCp.nightParking}}" *ngIf="selectedCp.nightParking==='NO'" src="assets/nightdark.svg">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <img style="height: 13px;" *ngIf="selectedCp.parkingAvail<1" src="assets/0.svg">
+                    <img style="height: 13px;" *ngIf="selectedCp.parkingAvail>1 && selectedCp.parkingAvail<11"src="assets/10.svg">
+                    <img style="height: 13px;" *ngIf="selectedCp.parkingAvail>10 && selectedCp.parkingAvail<21"src="assets/20.svg">
+                    <img style="height: 13px;" *ngIf="selectedCp.parkingAvail>20 && selectedCp.parkingAvail<31"src="assets/30.svg">
+                    <img style="height: 13px;" *ngIf="selectedCp.parkingAvail>30 && selectedCp.parkingAvail<41"src="assets/40.svg">
+                    <img style="height: 13px;" *ngIf="selectedCp.parkingAvail>40 && selectedCp.parkingAvail<51"src="assets/50.svg">
+                    <img style="height: 13px;" *ngIf="selectedCp.parkingAvail>50 && selectedCp.parkingAvail<61"src="assets/60.svg">
+                    <img style="height: 13px;" *ngIf="selectedCp.parkingAvail>60 && selectedCp.parkingAvail<71"src="assets/70.svg">
+                    <img style="height: 13px;" *ngIf="selectedCp.parkingAvail>70 && selectedCp.parkingAvail<81"src="assets/80.svg">
+                    <img style="height: 13px;" *ngIf="selectedCp.parkingAvail>80 && selectedCp.parkingAvail<91"src="assets/90.svg">
+                    <img style="height: 13px;" *ngIf="selectedCp.parkingAvail>90"src="assets/100.svg">
+                </div>
+            </div>
+            <br>
+        <br>
+        <p *ngIf="nearbyCp.length!=0" style="font-size: 10px; padding-left: 18px;">NEARBY</p>
+        <div *ngFor="let cp of nearbyCp">
+            <div style="border-radius: 35px; background-color: white;  height: 150px;">
+                <div style="padding-left:10px; padding-top: 25px;">
+                    <img src="assets/plogo.svg" style="float: left; width: 50px; height: 50px;"/>
+                </div>
+                <div style="padding-left: 18%; padding-right: 4%;">
+                    <p style="line-height: 1.2; font-size: 15px; color: #4D4E4E;">{{cp.address}}</p>
+                    <p *ngIf="cp.totalLots!==0" style="line-height: 0.8; font-size: 0.6rem;">{{cp.lotsAvail}} of {{cp.totalLots}} lots remaining</p>
+                    <p *ngIf="cp.totalLots===0" style="line-height: 0.8; font-size: 0.6rem;">No data available</p>
+                    <p style="line-height: 0.8; font-size: 0.6rem;">{{cp.carparkType}} - {{cp.parkingSystemType}}</p>
+                    <div style="float:right; padding-right: 20px;">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td>
+                                    <img style="height: 22px;" title="Short-term parking: {{selectedCp.shortTermParking}}" *ngIf="cp.shortTermParking!=='NO'" src="assets/clock.svg">
+                                    <img style="height: 22px;" title="Short-term parking: {{selectedCp.shortTermParking}}" *ngIf="cp.shortTermParking==='NO'" src="assets/clockdark.svg">
+                                </td>
+                                <td>
+                                    <img style="height: 22px;" title="Free parking: {{selectedCp.freeParking}}" *ngIf="cp.freeParking!=='NO'" src="assets/dolla.svg">
+                                    <img style="height: 22px;" title="Free parking: {{selectedCp.freeParking}}" *ngIf="cp.freeParking==='NO'" src="assets/dolladark.svg">
+                                </td>
+                                <td>
+                                    <img style="height: 22px;" title="Night parking: {{selectedCp.nightParking}}" *ngIf="cp.nightParking!=='NO'" src="assets/night.svg">
+                                    <img style="height: 22px;" title="Night parking: {{selectedCp.nightParking}}" *ngIf="cp.nightParking==='NO'" src="assets/nightdark.svg">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <img style="height: 13px;" *ngIf="cp.parkingAvail<1" src="assets/0.svg">
+                    <img style="height: 13px;" *ngIf="cp.parkingAvail>1 && cp.parkingAvail<11"src="assets/10.svg">
+                    <img style="height: 13px;" *ngIf="cp.parkingAvail>10 && cp.parkingAvail<21"src="assets/20.svg">
+                    <img style="height: 13px;" *ngIf="cp.parkingAvail>20 && cp.parkingAvail<31"src="assets/30.svg">
+                    <img style="height: 13px;" *ngIf="cp.parkingAvail>30 && cp.parkingAvail<41"src="assets/40.svg">
+                    <img style="height: 13px;" *ngIf="cp.parkingAvail>40 && cp.parkingAvail<51"src="assets/50.svg">
+                    <img style="height: 13px;" *ngIf="cp.parkingAvail>50 && cp.parkingAvail<61"src="assets/60.svg">
+                    <img style="height: 13px;" *ngIf="cp.parkingAvail>60 && cp.parkingAvail<71"src="assets/70.svg">
+                    <img style="height: 13px;" *ngIf="cp.parkingAvail>70 && cp.parkingAvail<81"src="assets/80.svg">
+                    <img style="height: 13px;" *ngIf="cp.parkingAvail>80 && cp.parkingAvail<91"src="assets/90.svg">
+                    <img style="height: 13px;" *ngIf="cp.parkingAvail>90"src="assets/100.svg">
+                </div>
+            </div>
+            <br><br>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="searchState===2 &&innerWidth<365"> 
+        <br>
+        <div style="width: 100%;">
+            <p style="font-size: 10px; padding-left: 18px;">SELECTED</p>
+            <div style="border-radius: 35px; background-color: white;  height: 150px;">
+                <div style="padding-left:10px; padding-top: 25px;">
+                    <img src="assets/plogo.svg" style="float: left; width: 35px; height: 35px;"/>
+                </div>
+                <div style="padding-left: 18%; padding-right: 4%;">
+                    <p style="line-height: 1.2; font-size: 15px; color: #4D4E4E;">{{selectedCp.address}}</p>
+                    <p *ngIf="selectedCp.totalLots!==0" style="line-height: 0.8; font-size: 0.6rem;">{{selectedCp.lotsAvail}} of {{selectedCp.totalLots}} lots remaining</p>
+                    <p *ngIf="selectedCp.totalLots===0" style="line-height: 0.8; font-size: 0.6rem;">No data available</p>
+                    <p style="line-height: 1; font-size: 0.6rem;">{{selectedCp.carparkType}} - {{selectedCp.parkingSystemType}}</p>
+                    <div style="float:right; padding-right: 10px;">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td>
+                                    <img style="height: 16px;" title="Short-term parking: {{selectedCp.shortTermParking}}" *ngIf="selectedCp.shortTermParking!=='NO'" src="assets/clock.svg">
+                                    <img style="height: 16px;" title="Short-term parking: {{selectedCp.shortTermParking}}" *ngIf="selectedCp.shortTermParking==='NO'" src="assets/clockdark.svg">
+                                </td>
+                                <td>
+                                    <img style="height: 16px;" title="Free parking: {{selectedCp.freeParking}}" *ngIf="selectedCp.freeParking!=='NO'" src="assets/dolla.svg">
+                                    <img style="height: 16px;" title="Free parking: {{selectedCp.freeParking}}" *ngIf="selectedCp.freeParking==='NO'" src="assets/dolladark.svg">
+                                </td>
+                                <td>
+                                    <img style="height: 16px;" title="Night parking: {{selectedCp.nightParking}}" *ngIf="selectedCp.nightParking!=='NO'" src="assets/night.svg">
+                                    <img style="height: 16px;" title="Night parking: {{selectedCp.nightParking}}" *ngIf="selectedCp.nightParking==='NO'" src="assets/nightdark.svg">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <img style="height: 10px;" *ngIf="selectedCp.parkingAvail<1" src="assets/0.svg">
+                    <img style="height: 10px;" *ngIf="selectedCp.parkingAvail>1 && selectedCp.parkingAvail<11"src="assets/10.svg">
+                    <img style="height: 10px;" *ngIf="selectedCp.parkingAvail>10 && selectedCp.parkingAvail<21"src="assets/20.svg">
+                    <img style="height: 10px;" *ngIf="selectedCp.parkingAvail>20 && selectedCp.parkingAvail<31"src="assets/30.svg">
+                    <img style="height: 10px;" *ngIf="selectedCp.parkingAvail>30 && selectedCp.parkingAvail<41"src="assets/40.svg">
+                    <img style="height: 10px;" *ngIf="selectedCp.parkingAvail>40 && selectedCp.parkingAvail<51"src="assets/50.svg">
+                    <img style="height: 10px;" *ngIf="selectedCp.parkingAvail>50 && selectedCp.parkingAvail<61"src="assets/60.svg">
+                    <img style="height: 10px;" *ngIf="selectedCp.parkingAvail>60 && selectedCp.parkingAvail<71"src="assets/70.svg">
+                    <img style="height: 10px;" *ngIf="selectedCp.parkingAvail>70 && selectedCp.parkingAvail<81"src="assets/80.svg">
+                    <img style="height: 10px;" *ngIf="selectedCp.parkingAvail>80 && selectedCp.parkingAvail<91"src="assets/90.svg">
+                    <img style="height: 10px;" *ngIf="selectedCp.parkingAvail>90"src="assets/100.svg">
+                </div>
+            </div>
+            <br>
+        <br>
+        <p *ngIf="nearbyCp.length!=0" style="font-size: 10px; padding-left: 18px;">NEARBY</p>
+        <div *ngFor="let cp of nearbyCp">
+            <div style="border-radius: 35px; background-color: white;  height: 150px;">
+                <div style="padding-left:10px; padding-top: 25px;">
+                    <img src="assets/plogo.svg" style="float: left; width: 35px; height: 35px;"/>
+                </div>
+                <div style="padding-left: 18%; padding-right: 4%;">
+                    <p style="line-height: 1.2; font-size: 15px; color: #4D4E4E;">{{cp.address}}</p>
+                    <p *ngIf="cp.totalLots!==0" style="line-height: 0.8; font-size: 0.6rem;">{{cp.lotsAvail}} of {{cp.totalLots}} lots remaining</p>
+                    <p *ngIf="cp.totalLots===0" style="line-height: 0.8; font-size: 0.6rem;">No data available</p>
+                    <p style="line-height: 1; font-size: 0.6rem;">{{cp.carparkType}} - {{cp.parkingSystemType}}</p>
+                    <div style="float:right; padding-right: 20px;">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td>
+                                    <img style="height: 16px;" title="Short-term parking: {{selectedCp.shortTermParking}}" *ngIf="cp.shortTermParking!=='NO'" src="assets/clock.svg">
+                                    <img style="height: 16px;" title="Short-term parking: {{selectedCp.shortTermParking}}" *ngIf="cp.shortTermParking==='NO'" src="assets/clockdark.svg">
+                                </td>
+                                <td>
+                                    <img style="height: 16px;" title="Free parking: {{selectedCp.freeParking}}" *ngIf="cp.freeParking!=='NO'" src="assets/dolla.svg">
+                                    <img style="height: 16px;" title="Free parking: {{selectedCp.freeParking}}" *ngIf="cp.freeParking==='NO'" src="assets/dolladark.svg">
+                                </td>
+                                <td>
+                                    <img style="height: 16px;" title="Night parking: {{selectedCp.nightParking}}" *ngIf="cp.nightParking!=='NO'" src="assets/night.svg">
+                                    <img style="height: 16px;" title="Night parking: {{selectedCp.nightParking}}" *ngIf="cp.nightParking==='NO'" src="assets/nightdark.svg">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <img style="height: 10px;" *ngIf="cp.parkingAvail<1" src="assets/0.svg">
+                    <img style="height: 10px;" *ngIf="cp.parkingAvail>1 && cp.parkingAvail<11"src="assets/10.svg">
+                    <img style="height: 10px;" *ngIf="cp.parkingAvail>10 && cp.parkingAvail<21"src="assets/20.svg">
+                    <img style="height: 10px;" *ngIf="cp.parkingAvail>20 && cp.parkingAvail<31"src="assets/30.svg">
+                    <img style="height: 10px;" *ngIf="cp.parkingAvail>30 && cp.parkingAvail<41"src="assets/40.svg">
+                    <img style="height: 10px;" *ngIf="cp.parkingAvail>40 && cp.parkingAvail<51"src="assets/50.svg">
+                    <img style="height: 10px;" *ngIf="cp.parkingAvail>50 && cp.parkingAvail<61"src="assets/60.svg">
+                    <img style="height: 10px;" *ngIf="cp.parkingAvail>60 && cp.parkingAvail<71"src="assets/70.svg">
+                    <img style="height: 10px;" *ngIf="cp.parkingAvail>70 && cp.parkingAvail<81"src="assets/80.svg">
+                    <img style="height: 10px;" *ngIf="cp.parkingAvail>80 && cp.parkingAvail<91"src="assets/90.svg">
+                    <img style="height: 10px;" *ngIf="cp.parkingAvail>90"src="assets/100.svg">
+                </div>
+            </div>
+            <br>
+            </div>
         </div>
     </div>
 </div>
+

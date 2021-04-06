@@ -11,6 +11,7 @@ export class PopupdialogComponent implements OnInit {
   keyword:string;
   matchCount:number;
   searchResults=[];
+  nearbyCp=[];
   noResults:boolean;
   tooManyResults:boolean;
   enoughResults: boolean;
@@ -26,7 +27,6 @@ export class PopupdialogComponent implements OnInit {
     this.keyword = data.keyword;
     if(this.type=="keyword"){
       this.searchResults=Object.assign([], data.data.results);
-      //console.log(data.data.found);
       this.matchCount=data.data.found;
       if(this.matchCount==0){
         this.noResults=true;
@@ -44,7 +44,7 @@ export class PopupdialogComponent implements OnInit {
           this.searchResults.splice(i);
         }
       }
-      console.log(this.searchResults);
+      //console.log(this.searchResults);
       this.matchCount=this.searchResults.length;
       if(this.matchCount==0){
         this.noResults=true;
@@ -55,6 +55,9 @@ export class PopupdialogComponent implements OnInit {
       else{
         this.enoughResults = true;
       }
+    }else if(this.type=="selectCarpark"){
+      this.searchResults=Object.assign([], data.data);
+      this.matchCount=this.searchResults.length;
     }
     //console.log(this.noResults);
   }
@@ -77,6 +80,9 @@ export class PopupdialogComponent implements OnInit {
     }
     this.dialogRef.close(data);
   }
+  selectCarpark(carpark){
+    this.dialogRef.close(carpark);
+  }
   selectLocation(address:string,type:string){
     if(this.tooManyResults||this.noResults){
       var data = {
@@ -90,11 +96,14 @@ export class PopupdialogComponent implements OnInit {
         freeParking :null,
         parkingAvail: 0,
         totalLots: 0,
-        lotsAvail: 0
+        lotsAvail: 0,
+        x:null,
+        y:null
       }
       this.dialogRef.close(data);
     }else{
       if(type=="carparkid"){
+        //console.log(this.searchResults);
         for(let i=0;i<this.searchResults.length;i++){
           var carparkId = this.searchResults[i].car_park_no;
           var shortTermParking = this.searchResults[i].short_term_parking;
@@ -102,6 +111,8 @@ export class PopupdialogComponent implements OnInit {
           var nightParking = this.searchResults[i].night_parking;
           var parkingSystemType = this.searchResults[i].type_of_parking_system;
           var freeParking = this.searchResults[i].free_parking;
+          var x = this.searchResults[i].x_coord;
+          var y = this.searchResults[i].y_coord;
         }
         var data = {
           message: "success",
@@ -114,23 +125,40 @@ export class PopupdialogComponent implements OnInit {
           freeParking :freeParking,
           parkingAvail: 0,
           totalLots: 0,
-          lotsAvail: 0
+          lotsAvail: 0,
+          x:x,
+          y:y
         }
         //console.log(dataCPId);
         this.dialogRef.close(data);
       }else if(type==="keyword"){
+        //console.log(this.searchResults);
+        for(let i=0;i<this.searchResults.length;i++){
+          if(this.searchResults[i].ADDRESS===address){
+            var carparkId = this.searchResults[i].car_park_no;
+            var shortTermParking = this.searchResults[i].short_term_parking;
+            var carparkType = this.searchResults[i].car_park_type;
+            var nightParking = this.searchResults[i].night_parking;
+            var parkingSystemType = this.searchResults[i].type_of_parking_system;
+            var freeParking = this.searchResults[i].free_parking;
+            var x = this.searchResults[i].X;
+            var y = this.searchResults[i].Y;
+          }
+        }
         var data = {
           message: "success",
           address: address,
-          carparkId: null,
-          shortTermParking: null,
-          carparkType: null,
-          nightParking: null,
-          parkingSystemType: null,
-          freeParking :null,
+          carparkId: carparkId,
+          shortTermParking: shortTermParking,
+          carparkType: carparkType,
+          nightParking: nightParking,
+          parkingSystemType: parkingSystemType,
+          freeParking :freeParking,
           parkingAvail: 0,
           totalLots: 0,
-          lotsAvail: 0
+          lotsAvail: 0,
+          x:x,
+          y:y
         }
         this.dialogRef.close(data);
       }

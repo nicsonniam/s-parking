@@ -3,8 +3,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;700&display=swap');
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
 @import "~bootstrap/dist/css/bootstrap.css";
-html {
+.bgcolor {
        background-color: #A9D0FE; 
+}
+.bgcolor-night {
+    background-color: #002147; 
 }
 h1,h2,h3,h4,h5,h6{
     font-family: 'Roboto', sans-serif;
@@ -15,6 +18,24 @@ a,p,button{
 }
 a,.closeButton{
     cursor: pointer;
+}
+.fleft{
+    float: left;
+}
+.fright{
+    float: right;
+}
+.taleft{
+    text-align: left;
+}
+.taright{
+    text-align: right;
+}
+.tacenter{
+    text-align: center;
+}
+.tooltip:hover .tooltiptext {
+    visibility: visible;
 }
 button{
     width: 100px;
