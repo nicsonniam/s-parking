@@ -39,7 +39,7 @@
 <div [ngClass]="{'maindiv-day':day&&innerWidth>1554,
                  'maindiv-day-smaller':day&&innerWidth>1047&&innerWidth<1555,
                  'maindiv-day-evensmaller':day&&innerWidth>799&&innerWidth<1048,
-                 'maindiv-day-smallest':day&&innerWidth<800">
+                 'maindiv-day-smallest':day&&innerWidth<800}">
     <div *ngIf="searchState<2" class="centerdiv">
         <table>
             <tr *ngIf="innerWidth>999">
@@ -409,7 +409,7 @@
                                     <img style="height: 22px;" title="Night parking: {{selectedCp.nightParking}}" *ngIf="cp.nightParking==='NO'" src="assets/nightdark.svg">
                                 </td>
                             </tr>
-                        </table>
+                        </table> 
                     </div>
                     <img style="height: 13px;" *ngIf="cp.parkingAvail<1" src="assets/0.svg">
                     <img style="height: 13px;" *ngIf="cp.parkingAvail>1 && cp.parkingAvail<11"src="assets/10.svg">
