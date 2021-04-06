@@ -37,7 +37,7 @@ export class SearchoverlayComponent implements OnInit {
   ngOnInit(): void {
     this.innerWidth = window.innerWidth;
   }
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize', ['$event']) 
     onResize(event) {
     this.innerWidth = window.innerWidth;
     //console.log(this.innerWidth);
