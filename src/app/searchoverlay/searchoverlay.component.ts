@@ -73,6 +73,18 @@ export class SearchoverlayComponent implements OnInit {
         console.log(error);
       }
     );
+  }
+  viewInfo(info,infoType){
+    const dialogConfig = new MatDialogConfig;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      data:info,
+      type: "info",
+      keyword:infoType
+    };
+    dialogConfig.width = '280px';
+    dialogConfig.height = '200px';
+    const dialogRef = this.dialog.open(PopupdialogComponent, dialogConfig);
   }  
   getStarted(){
     this.searchState=1;

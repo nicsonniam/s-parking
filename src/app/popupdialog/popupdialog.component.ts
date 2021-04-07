@@ -81,7 +81,7 @@ export class PopupdialogComponent implements OnInit {
     this.dialogRef.close(data);
   }
   selectCarpark(carpark){
-    this.dialogRef.close(carpark);
+    this.dialogRef.close(carpark );
   }
   selectLocation(address:string,type:string){
     if(this.tooManyResults||this.noResults){

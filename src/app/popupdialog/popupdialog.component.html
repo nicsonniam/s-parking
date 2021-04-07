@@ -37,11 +37,15 @@
     <div style="padding-bottom: 30px;">
         <img  src="assets/locations.svg">
     </div>
-    <p style="font-weight: 300;">{{matchCount}} carparks found 
+    <p style="font-weight: 300;">{{matchCount}} carparks found </p>
     <div>
         <ul>
             <li *ngFor="let result of searchResults" style="padding-top: 5px; padding-bottom: 10px;"><a (click)="selectCarpark(result)" >{{result.address}}</a></li>
         </ul>
     </div>
 </div>
- 
+<div *ngIf="type==='info'" style="text-align: center; padding-left: 15%;padding-right: 15%;">
+    <br>
+    <p style="font-weight: 300;">{{keyword}}:</p>
+    <p style="font-weight: 300;">{{data.data}}</p>
+</div>
