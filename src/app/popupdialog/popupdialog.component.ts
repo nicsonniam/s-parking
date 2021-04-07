@@ -19,7 +19,7 @@ export class PopupdialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any, 
     private dialogRef: MatDialogRef<PopupdialogComponent>
   ) 
-  {
+  { 
     this.noResults=false;
     this.tooManyResults=false; 
     this.enoughResults=false;

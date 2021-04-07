@@ -159,7 +159,7 @@ export class SearchoverlayComponent implements OnInit {
                 }       
                 if(ydiff!=0&&xdiff!=0){ //filter all carparks for nearby ones
                   if(xdiff<factor && ydiff<factor){
-                    var data = {
+                    var data = { 
                       message: "success",
                       address: this.allCp[i].address,
                       carparkId: this.allCp[i].car_park_no,
