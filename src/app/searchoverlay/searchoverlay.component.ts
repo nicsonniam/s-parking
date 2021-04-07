@@ -317,62 +317,68 @@ export class SearchoverlayComponent implements OnInit {
                 const dialogRef = this.dialog.open(PopupdialogComponent, dialogConfig);
                 dialogRef.afterClosed().subscribe(result => {
                   this.selectedCp = Object.assign([], result);
-                  //console.log(this.selectedCp);
-                  this.nearbyCp=[];
-                  var x = parseInt(this.selectedCp.x);
-                  var y = parseInt(this.selectedCp.y);
-                  //console.log(x,y); 
-                  var factor = 300; //distance factor
-                  for(let i=0; i<this.allCp.length;i++){
-                    var x1 = parseInt(this.allCp[i].x_coord);
-                    var y1 = parseInt(this.allCp[i].y_coord);
-                    if(x1>x){
-                      var xdiff = x1-x;
-                    }else{
-                      var xdiff = x-x1; 
-                    }  
-                    if(y1>y){
-                      var ydiff = y1-y;
-                    }else{
-                      var ydiff = y-y1;
-                    }       
-                    if(ydiff!=0&&xdiff!=0){ 
-                      if(xdiff<factor && ydiff<factor){
-                        var data = {
-                          message: "success",
-                          address: this.allCp[i].address,
-                          carparkId: this.allCp[i].car_park_no,
-                          shortTermParking: this.allCp[i].short_term_parking,
-                          carparkType: this.allCp[i].car_park_type,
-                          nightParking: this.allCp[i].night_parking,
-                          parkingSystemType: this.allCp[i].type_of_parking_system,
-                          freeParking :this.allCp[i].free_parking,
-                          parkingAvail: 0,
-                          totalLots: 0,
-                          lotsAvail: 0,
-                          x:this.allCp[i].x_coord,
-                          y:this.allCp[i].y_coord
-                        }     
-                        this.nearbyCp.push(data);
-                      }
-                    } 
-                  }
-                  for(let i=0; i<this.cpAvail.carpark_data.length;i++){
-                    for(let j=0;j<this.nearbyCp.length;j++){ 
-                      if(this.nearbyCp[j].carparkId==this.cpAvail.carpark_data[i].carpark_number){
-                        if(this.cpAvail.carpark_data[i].carpark_info[0].lot_type=="C"){
-                          var lotsAvail = parseInt(this.cpAvail.carpark_data[i].carpark_info[0].lots_available);
-                          var totalLots = parseInt(this.cpAvail.carpark_data[i].carpark_info[0].total_lots);
-                          var lotsTaken = totalLots - lotsAvail;
-                          var parkingAvail = Math.round( (lotsTaken/totalLots) *100);
-                          this.nearbyCp[j].lotsAvail= lotsAvail;
-                          this.nearbyCp[j].totalLots = totalLots;
-                          this.nearbyCp[j].parkingAvail = parkingAvail; 
+                  if(this.selectedCp.message=="failed")
+                  {
+                    this.searchState=1;
+                  } 
+                  else{
+                    //console.log(this.selectedCp);
+                    this.nearbyCp=[];
+                    var x = parseInt(this.selectedCp.x);
+                    var y = parseInt(this.selectedCp.y);
+                    //console.log(x,y); 
+                    var factor = 300; //distance factor
+                    for(let i=0; i<this.allCp.length;i++){
+                      var x1 = parseInt(this.allCp[i].x_coord);
+                      var y1 = parseInt(this.allCp[i].y_coord);
+                      if(x1>x){
+                        var xdiff = x1-x;
+                      }else{
+                        var xdiff = x-x1; 
+                      }  
+                      if(y1>y){
+                        var ydiff = y1-y;
+                      }else{
+                        var ydiff = y-y1;
+                      }       
+                      if(ydiff!=0&&xdiff!=0){ 
+                        if(xdiff<factor && ydiff<factor){
+                          var data = {
+                            message: "success",
+                            address: this.allCp[i].address,
+                            carparkId: this.allCp[i].car_park_no,
+                            shortTermParking: this.allCp[i].short_term_parking,
+                            carparkType: this.allCp[i].car_park_type,
+                            nightParking: this.allCp[i].night_parking,
+                            parkingSystemType: this.allCp[i].type_of_parking_system,
+                            freeParking :this.allCp[i].free_parking,
+                            parkingAvail: 0,
+                            totalLots: 0,
+                            lotsAvail: 0,
+                            x:this.allCp[i].x_coord,
+                            y:this.allCp[i].y_coord
+                          }     
+                          this.nearbyCp.push(data);
+                        }
+                      } 
+                    }
+                    for(let i=0; i<this.cpAvail.carpark_data.length;i++){
+                      for(let j=0;j<this.nearbyCp.length;j++){ 
+                        if(this.nearbyCp[j].carparkId==this.cpAvail.carpark_data[i].carpark_number){
+                          if(this.cpAvail.carpark_data[i].carpark_info[0].lot_type=="C"){
+                            var lotsAvail = parseInt(this.cpAvail.carpark_data[i].carpark_info[0].lots_available);
+                            var totalLots = parseInt(this.cpAvail.carpark_data[i].carpark_info[0].total_lots);
+                            var lotsTaken = totalLots - lotsAvail;
+                            var parkingAvail = Math.round( (lotsTaken/totalLots) *100);
+                            this.nearbyCp[j].lotsAvail= lotsAvail;
+                            this.nearbyCp[j].totalLots = totalLots;
+                            this.nearbyCp[j].parkingAvail = parkingAvail; 
+                          }
                         }
                       }
                     }
-                  }
-                  this.searchState=2;
+                    this.searchState=2;
+                    }
                   });
                 }
               }else if(this.selectedCp.message=="failed"){
